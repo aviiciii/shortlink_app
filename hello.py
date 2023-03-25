@@ -18,19 +18,30 @@ class MyGridLayout(GridLayout):
     def __init__(self, **kwargs):
         super(MyGridLayout, self).__init__(**kwargs)
 
-        self.cols = 2
+        self.cols = 1
 
-        self.add_widget(Label(text="Long Url: ", font_size=36))
+        self.input_form = GridLayout()
+
+        self.input_form.cols = 2
+
+
+
+        self.input_form.add_widget(Label(text="Long Url: ", font_size=36))
         self.long_url = TextInput(multiline=False)
-        self.add_widget(self.long_url)
+        self.input_form.add_widget(self.long_url)
 
-        self.add_widget(Label(text="Short Url: ", font_size=46))
+        self.input_form.add_widget(Label(text="Short Url: ", font_size=46))
         self.slug = TextInput(multiline=False)
-        self.add_widget(self.slug)
+        self.input_form.add_widget(self.slug)
+
+        self.add_widget(self.input_form)
 
         self.shorten_button = Button(text="Shorten", font_size=40)
         self.shorten_button.bind(on_press=self.shorten)
         self.add_widget(self.shorten_button)
+
+        self.message = Label(text="", font_size=40)
+        self.add_widget(self.message)
 
     def shorten(self, instance):
         print("Button pressed!!")
