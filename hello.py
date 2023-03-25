@@ -6,6 +6,14 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 
+
+# API 
+import requests
+from dotenv import load_dotenv
+import os
+load_dotenv()
+import json
+
 class MyGridLayout(GridLayout):
     def __init__(self, **kwargs):
         super(MyGridLayout, self).__init__(**kwargs)
@@ -29,14 +37,36 @@ class MyGridLayout(GridLayout):
         long_url = self.long_url.text
         slug = self.slug.text
 
+        print(long_url, type(long_url))
+        print(slug, type(slug))
 
-        
+
+        if slug:
+            print("Slug is not empty")
+            pass
+        else:
+            print("Slug is empty")
+
+            # API call 
+            url = "https://api.short.io/links/lnk_2MIx_9dCPkouo4fY"
+            payload = json.dumps({"allowDuplicates": False, "domain": "we.laavesh.ml", "originalURL": long_url })
+            headers = {
+                'accept': "application/json",
+                'content-type': "application/json",
+                'authorization': os.getenv("API_KEY")
+            }
+
+            response = requests.request("POST", url, data=payload, headers=headers)
+
+            res = json.dumps(response.json(), indent=4) 
+            print(res)
 
 
 
-        short_url = "https://link.laavesh.ml/" + slug
 
-        self.add_widget(Label(text=f"Shortened: {short_url}", font_size=20))
+        short_url = "https://we.laavesh.ml/" + slug
+
+        self.add_widget(Label(text=f"Shortened!", font_size=20))
 
 class HelloApp(App):
     def build(self):
