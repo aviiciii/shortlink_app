@@ -65,7 +65,30 @@ class MyGridLayout(GridLayout):
 
         # Check if slug is given
         if slug:
-            pass
+            print("-----link.laavesh.ml-----")
+
+            # API call to link.laavesh.ml
+            url = "https://api.short.io/links"
+            payload = json.dumps({"allowDuplicates": False, "domain": "link.laavesh.ml", "originalURL": long_url, "path": slug })
+            headers = {
+                'content-type': "application/json",
+                'authorization': os.getenv("API_KEY2")
+            }
+            res = requests.post(url, data=payload, headers = headers, json=True)
+
+            res.raise_for_status()
+            res_json = res.json()
+
+            if res_json["originalURL"] == long_url:
+                print(f"Created! \n {res_json['shortURL']}")
+
+                # clear input fields
+                self.long_url.text = ""
+                self.slug.text = ""
+
+                # update message
+                self.message.text = f"{res_json['shortURL']} \n Created!"
+
         else:
             print("-----we.laavesh.ml-----")
 
