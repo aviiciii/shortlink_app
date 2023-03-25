@@ -17,8 +17,8 @@ class MyGridLayout(GridLayout):
         self.add_widget(self.long_url)
 
         self.add_widget(Label(text="Short Url: ", font_size=46))
-        self.short_url = TextInput(multiline=False)
-        self.add_widget(self.short_url)
+        self.slug = TextInput(multiline=False)
+        self.add_widget(self.slug)
 
         self.shorten_button = Button(text="Shorten", font_size=40)
         self.shorten_button.bind(on_press=self.shorten)
@@ -27,7 +27,16 @@ class MyGridLayout(GridLayout):
     def shorten(self, instance):
         print("Button pressed!!")
         long_url = self.long_url.text
-        short_url = self.short_url.text
+        slug = self.slug.text
+
+
+        
+
+
+
+        short_url = "https://link.laavesh.ml/" + slug
+
+        self.add_widget(Label(text=f"Shortened: {short_url}", font_size=20))
 
 class HelloApp(App):
     def build(self):
