@@ -6,6 +6,8 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from kivy.uix.widget import Widget
 
+# import Clipboard
+from kivy.core.clipboard import Clipboard
 
 # API 
 import requests
@@ -80,14 +82,20 @@ class MyGridLayout(GridLayout):
             res_json = res.json()
 
             if res_json["originalURL"] == long_url:
-                print(f"Created! \n {res_json['shortURL']}")
+                short_url = res_json["shortURL"]
+                print(f"Created! \n {short_url}")
 
                 # clear input fields
                 self.long_url.text = ""
                 self.slug.text = ""
 
                 # update message
-                self.message.text = f"{res_json['shortURL']} \n Created!"
+                self.message.text = f"{short_url} \n Created!"
+
+                Clipboard.copy(short_url)
+            else:
+                print("Response: ", res)
+                self.message.text = "Error! Try again"
 
         else:
             print("-----we.laavesh.ml-----")
@@ -117,6 +125,7 @@ class MyGridLayout(GridLayout):
 
                 # update message
                 self.message.text = "we.laavesh.ml \n Updated!"
+                Clipboard.copy("https://we.laavesh.ml")
             else:
                 print("Response: ", res)
                 self.message.text = "Error! Try again"
