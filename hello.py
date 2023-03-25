@@ -20,45 +20,53 @@ class MyGridLayout(GridLayout):
 
         self.cols = 1
 
+        # Input form
         self.input_form = GridLayout()
-
         self.input_form.cols = 2
 
-
-
+        # Input - Long Url
         self.input_form.add_widget(Label(text="Long Url: ", font_size=36))
         self.long_url = TextInput(multiline=False)
         self.input_form.add_widget(self.long_url)
 
+        # Input - Slug
         self.input_form.add_widget(Label(text="Short Url: ", font_size=46))
         self.slug = TextInput(multiline=False)
         self.input_form.add_widget(self.slug)
 
+        # Add input form to main layout
         self.add_widget(self.input_form)
 
+
+        # Shorten button
         self.shorten_button = Button(text="Shorten", font_size=40)
         self.shorten_button.bind(on_press=self.shorten)
         self.add_widget(self.shorten_button)
 
-        self.message = Label(text="", font_size=40)
+        # Message area
+        self.message = Label(text="we.laavesh.ml", font_size=40)
         self.add_widget(self.message)
 
+
+    # Shorten Api call function
     def shorten(self, instance):
         print("Button pressed!!")
+        # Get input values
         long_url = self.long_url.text
         slug = self.slug.text
 
-        print(long_url, type(long_url))
-        print(slug, type(slug))
+        # add https:// if not present
+        if long_url[:8] != "https://":
+            long_url = "https://" + long_url
 
-
+        # Check if slug is given
         if slug:
-            print("Slug is not empty")
+            print("Slug present")
             pass
         else:
-            print("Slug is empty")
+            print("Slug absent")
 
-            # API call 
+            # API call to we.laavesh.ml
             url = "https://api.short.io/links/lnk_2MIx_9dCPkouo4fY"
             payload = json.dumps({"allowDuplicates": False, "domain": "we.laavesh.ml", "originalURL": long_url })
             headers = {
@@ -67,17 +75,23 @@ class MyGridLayout(GridLayout):
                 'authorization': os.getenv("API_KEY")
             }
 
+            # call api
             response = requests.request("POST", url, data=payload, headers=headers)
+            # response
+            res = json.dumps(response.json(), indent=4)
+            res = json.loads(res)
 
-            res = json.dumps(response.json(), indent=4) 
-            print(res)
+            print(type(res))
+            print(res["originalURL"], long_url)
+            if res["originalURL"] == long_url:
+                print("Updated! we.laavesh.ml")
 
+            # clear input fields
+            self.long_url.text = ""
+            self.slug.text = ""
 
-
-
-        short_url = "https://we.laavesh.ml/" + slug
-
-        self.add_widget(Label(text=f"Shortened!", font_size=20))
+            # update message
+            self.message.text = "we.laavesh.ml \n Updated!"
 
 class HelloApp(App):
     def build(self):
