@@ -50,21 +50,24 @@ class MyGridLayout(GridLayout):
 
     # Shorten Api call function
     def shorten(self, instance):
-        print("Button pressed!!")
         # Get input values
         long_url = self.long_url.text
         slug = self.slug.text
 
-        # add https:// if not present
-        if long_url[:8] != "https://":
-            long_url = "https://" + long_url
+        # Check if long url is given
+        if long_url:
+            # add https:// if not present
+            if long_url[:8] != "https://" and long_url[:7] != "http://":
+                long_url = "https://" + long_url
+        else:
+            print("Long url absent")
+            self.message.text = "Long url absent"
 
         # Check if slug is given
         if slug:
-            print("Slug present")
             pass
         else:
-            print("Slug absent")
+            print("-----we.laavesh.ml-----")
 
             # API call to we.laavesh.ml
             url = "https://api.short.io/links/lnk_2MIx_9dCPkouo4fY"
@@ -77,21 +80,25 @@ class MyGridLayout(GridLayout):
 
             # call api
             response = requests.request("POST", url, data=payload, headers=headers)
-            # response
+            # response formatting
             res = json.dumps(response.json(), indent=4)
-            res = json.loads(res)
+            res_json = json.loads(res)
 
-            print(type(res))
-            print(res["originalURL"], long_url)
-            if res["originalURL"] == long_url:
-                print("Updated! we.laavesh.ml")
+            # check if url is updated
+            if res_json["originalURL"] == long_url:
+                print("Updated!")
 
-            # clear input fields
-            self.long_url.text = ""
-            self.slug.text = ""
+                # clear input fields
+                self.long_url.text = ""
+                self.slug.text = ""
 
-            # update message
-            self.message.text = "we.laavesh.ml \n Updated!"
+                # update message
+                self.message.text = "we.laavesh.ml \n Updated!"
+            else:
+                print("Response: ", res)
+                self.message.text = "Error! Try again"
+        
+
 
 class HelloApp(App):
     def build(self):
